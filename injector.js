@@ -1,8 +1,8 @@
 injected_scripts = [
-    'rxjs.umd.min.js',
-    'convergence.global.min.js',
+    'convergence/rxjs.umd.min.js',
+    'convergence/convergence.global.min.js',
+    'convergence/convergence-input-element-bindings.min.js',
 
-    'convergence-input-element-bindings.min.js',
     'ace-collab-ext/AceCursorMarker.js',
     'ace-collab-ext/AceMultiCursorManager.js',
     'ace-collab-ext/AceMultiSelectionManager.js',
@@ -15,7 +15,7 @@ injected_scripts = [
     'AceBinder.js',
 
     'inject.js'
-]
+];
 
 injected_scripts.forEach(script_uri => {
     console.log(script_uri)

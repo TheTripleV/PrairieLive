@@ -44,13 +44,13 @@ function p(x) {
     let sidebar_element = document.getElementById("content").getElementsByClassName("row")[0].children[1];
     sidebar_element.insertBefore(PRLVE_DATA.info_element, sidebar_element.firstElementChild);
 
-    setTimeout(prlvego, 1000);
+    setTimeout(prlvego, 777);
 
 
     function prlvego() {
         console.log("PRLVE: go");
 
-        PRLVE_DATA.server_url = "http://localhost:8000/api/realtime/convergence/default";
+        PRLVE_DATA.server_url = "https://prairie.live/realtime/convergence/default";
         PRLVE_DATA.collaborative = true;
 
         var regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);

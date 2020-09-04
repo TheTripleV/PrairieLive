@@ -26,9 +26,9 @@ class AceBinder {
         this._model = model;
         this._editor_id = editor_id;
 
-        this.cursorKey = "cursor-"; // + this.editor_id;
-        this.selectionKey = "selection-"; // + this.editor_id;
-        this.viewKey = "view-"; // + this.editor_id;
+        this.cursorKey = "cursor"; // + this.editor_id;
+        this.selectionKey = "selection"; // + this.editor_id;
+        this.viewKey = "view"; // + this.editor_id;
 
         this._session = editor.getSession();
         this._document = this._session.getDocument();
@@ -121,7 +121,7 @@ class AceBinder {
         this._cursorReference = this._model.indexReference(this.cursorKey);
 
         const references = this._model.references({ key: this.cursorKey });
-        console.log(references);
+        // console.log(references);
         references.forEach((reference) => {
             if (!reference.isLocal()) {
                 this._addCursor(reference);

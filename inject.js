@@ -1,70 +1,103 @@
+var PRLVE_DATA = {};
+
+function p(x) {
+    console.log(x);
+}
+
 (function() {
 
-    setTimeout(prlvego, 300);
+    // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+    function htmlToElement(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+
+    PRLVE_DATA.info_element = htmlToElement(
+        `
+        <div class="card mb-4 prlve-info">
+            <div class="card-header bg-secondary text-white" style="background-color:#E84A27!important;">PraireLive Status</div>
+            <table class="table table-sm two-column-description-no-header" style="border-color:#E84A27!important;">
+            <tbody>
+                <tr>
+                    <td>Connection:</td>
+                    <td>
+                        <div class="prlve-connection-status">
+                            <span class="badge badge-danger">
+                                NO!
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Note</b>: You must click <br> save for Prairielearn <br> to save your code.
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+        `
+    );
+
+    let sidebar_element = document.getElementById("content").getElementsByClassName("row")[0].children[1];
+    sidebar_element.insertBefore(PRLVE_DATA.info_element, sidebar_element.firstElementChild);
+
+    setTimeout(prlvego, 1000);
+
 
     function prlvego() {
+        console.log("PRLVE: go");
 
-        // function sleep(milliseconds) {
-        //     let timeStart = new Date().getTime();
-        //     while (true) {
-        //         let elapsedTime = new Date().getTime() - timeStart;
-        //         if (elapsedTime > milliseconds) {
-        //             break;
-        //         }
-        //     }
-        // }
+        PRLVE_DATA.server_url = "http://localhost:8000/api/realtime/convergence/default";
+        PRLVE_DATA.collaborative = true;
 
-        // sleep(3000);
+        var regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
 
-        var DOMAIN_URL = "http://localhost:8000/api/realtime/convergence/default";
-        var COLLABORATIVE = true;
+        PRLVE_DATA.ciiq = regex_groups[1] + "-" + regex_groups[2];
+        PRLVE_DATA.course_instance = regex_groups[1];
+        PRLVE_DATA.instance_question = regex_groups[2];
+        PRLVE_DATA.user_fullname = document.getElementById("navbarDropdown").textContent.trim();
 
-        var regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href)
+        user_fullname_l = PRLVE_DATA.user_fullname.split(" ");
 
-        var ciiq = regex_groups[1] + "-" + regex_groups[2]
-
-        var full_name_l = document.getElementById("navbarDropdown").textContent.trim().split(" ")
-
-        var disp_name = full_name_l[0] + " " + full_name_l[full_name_l.length - 1][0] + "." + " " + Math.floor(Math.random() * 100);
-
-        var page_editors = [];
+        PRLVE_DATA.user_display_name = user_fullname_l[0] + " " + user_fullname_l[user_fullname_l.length - 1][0] + "." + " " + Math.floor(Math.random() * 100);
 
         var ace_editors = document.querySelectorAll(".ace_editor");
 
-        console.log(ace_editors);
-
-        var editor_defaults = {}
+        PRLVE_DATA.areas = {};
 
         for (var i = 0; i < ace_editors.length; i++) {
-            console.log(i);
 
-            let ace_editor_name = ace_editors[i].parentElement.parentElement.id;
-            let ace_editor = ace_editors[i];
-            console.log(ace_editor_name);
-            page_editors.push(
-                [
-                    ace_editor_name,
-                    ace_editor
-                ]
-            );
+            let ace_editor_id = ace_editors[i].parentElement.parentElement.id;
+            PRLVE_DATA.areas[ace_editor_id] = {};
+            let area = PRLVE_DATA.areas[ace_editor_id];
+            area.editor_element = ace_editors[i];
+            area.filename = area.editor_element.parentElement.getElementsByClassName("card-header")[0].textContent;
+            area.editor = area.editor_element.env.editor;
+            area.session = area.editor.getSession();
+            area.offline_content = area.session.getValue();
 
-            editor_defaults[ace_editor_name] = ace_editor.env.editor.getSession().getValue();
         }
 
-        Convergence.connectAnonymously(DOMAIN_URL, disp_name)
+        Convergence.connectAnonymously(PRLVE_DATA.server_url, PRLVE_DATA.user_display_name)
             .then(initApp)
             .catch((error) => {
                 console.log("Could not connect: " + error);
             });
 
         function initApp(domain) {
-            console.log("WW");
-            console.log(editor_defaults);
-            const modelService = domain.models();
-            modelService.openAutoCreate({
-                    collection: ciiq,
-                    id: "only-model",
-                    data: editor_defaults
+            console.log("PRLVE: initApp");
+            PRLVE_DATA.domain = domain;
+            // const modelService = domain.models();
+            PRLVE_DATA.domain.models().openAutoCreate({
+                    collection: PRLVE_DATA.course_instance,
+                    id: PRLVE_DATA.instance_question,
+                    data: Object.keys(PRLVE_DATA.areas).reduce(function(obj, ace_editor_id) {
+                        obj[ace_editor_id] = PRLVE_DATA.areas[ace_editor_id].offline_content;
+                        return obj;
+                    }, {})
                 })
                 .then(initModel)
                 .catch((error) => {
@@ -73,41 +106,45 @@
         }
 
         function initModel(model) {
+            console.log("PRLVE: initModel");
+            PRLVE_DATA.model = model;
 
-            for (var i = 0; i < page_editors.length; i++) {
-                editor_id = page_editors[i][0];
-                const editor = page_editors[i][1].env.editor;
-                const editor_model = model.elementAt(editor_id);
+            var u = 0;
+            for (const ace_editor_id in PRLVE_DATA.areas) {
+                p(u);
+                p(ace_editor_id);
+                let area = PRLVE_DATA.areas[ace_editor_id];
+                area.model = PRLVE_DATA.model.elementAt(ace_editor_id);
+                p("s1");
+                area.session.setValue(area.model.value());
+                area.editor.setReadOnly(false);
+                p("s2");
+                area.radarViewElement = area.editor_element.parentElement.getElementsByClassName("card-footer")[0];
+                area.aceBinder = new AceBinder(area.editor, area.model, PRLVE_DATA.collaborative, area.radarViewElement, ace_editor_id);
+                area.aceBinder.bind();
+                p("s3");
+                // Add Button
+                area.restore_button_element = htmlToElement(
+                    '<button type="button" class="btn btn-outline-secondary btn-sm prlve-restore-offline-version" tabindex="-1">PLive: Restore offline version</button>'
+                );
 
-                const gutter = page_editors[i][1].parentElement.getElementsByClassName("card-footer")[0]
+                let button_row = area.editor_element.parentElement.getElementsByClassName("card-footer")[0].getElementsByClassName("ml-auto")[0];
+                button_row.insertBefore(area.restore_button_element, button_row.firstElementChild);
 
-                editor.getSession().setValue(editor_model.value());
+                area.restore_button_element.addEventListener('click', (event) => {
+                    area.editor.getSession().setValue(area.offline_content);
+                });
 
-                editor.setReadOnly(false);
+            } // end for
 
-                // BIND
-                if (i == 0) {
-                    const aceBinder = new AceBinder(editor, editor_model, COLLABORATIVE, gutter, editor_id);
-                    aceBinder.bind();
-                }
+            let connection_element = PRLVE_DATA.info_element.getElementsByClassName("prlve-connection-status")[0].firstElementChild;
+            connection_element.className = "badge badge-success";
+            connection_element.textContent = "Yes!";
 
-
+        } // end function initModel
 
 
-            } // for
-
-            // const stringModel = model.elementAt("text");
-            // const textArea = document.getElementById("textarea");
-
-            // // Sets the value of the text area and performs a two-way-binding.
-            // ConvergenceInputElementBinder.bindTextInput(textArea, stringModel);
-        } // func
-
-        // alert('inserted self... giggity');
 
     }
 
 })();
-
-
-// document.querySelectorAll(".ace_editor")

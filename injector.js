@@ -18,7 +18,7 @@ injected_scripts = [
 ];
 
 injected_scripts.forEach(script_uri => {
-    console.log(script_uri)
+    // console.log(script_uri);
     var s = document.createElement('script');
 
     s.src = chrome.runtime.getURL(script_uri);

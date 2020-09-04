@@ -1,8 +1,11 @@
 {
     "name": "Prairie Live",
-    "version": "1.0",
+    "version": "0.2",
     "description": "Work together in realtime!",
     "manifest_version": 2,
+    "icons": {
+        "128": "icon128.png"
+    },
     "content_scripts": [{
         "run_at": "document_idle",
         "matches": [

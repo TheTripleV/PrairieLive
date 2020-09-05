@@ -20,15 +20,14 @@ String.prototype.toColor = function() {
 
 class AceBinder {
 
-    constructor(editor, model, collaborative, radarViewElement, editor_id) {
+    constructor(editor, model, collaborative, radarViewElement) {
         this._editor = editor;
         this._radarViewElement = radarViewElement;
         this._model = model;
-        this._editor_id = editor_id;
 
-        this.cursorKey = "cursor"; // + this.editor_id;
-        this.selectionKey = "selection"; // + this.editor_id;
-        this.viewKey = "view"; // + this.editor_id;
+        this.cursorKey = "cursor";
+        this.selectionKey = "selection";
+        this.viewKey = "view";
 
         this._session = editor.getSession();
         this._document = this._session.getDocument();

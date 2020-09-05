@@ -1,14 +1,15 @@
-var PRLVE_DATA = {};
-
 function p(x) {
     console.log(x);
 }
 
 (function() {
+    "use strict";
+
+    window.PRLVE_DATA = {};
 
     // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
     function htmlToElement(html) {
-        var template = document.createElement('template');
+        let template = document.createElement('template');
         html = html.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = html;
         return template.content.firstChild;
@@ -51,30 +52,32 @@ function p(x) {
         console.log("PRLVE: go");
 
         PRLVE_DATA.server_url = "https://prairie.live/realtime/convergence/default";
-        PRLVE_DATA.collaborative = true;
+        PRLVE_DATA.collaborative = false;
 
-        var regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
+        let regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
 
         PRLVE_DATA.ciiq = regex_groups[1] + "-" + regex_groups[2];
         PRLVE_DATA.course_instance = regex_groups[1];
         PRLVE_DATA.instance_question = regex_groups[2];
         PRLVE_DATA.user_fullname = document.getElementById("navbarDropdown").textContent.trim();
 
-        user_fullname_l = PRLVE_DATA.user_fullname.split(" ");
+        let user_fullname_l = PRLVE_DATA.user_fullname.split(" ");
 
         PRLVE_DATA.user_display_name = user_fullname_l[0] + " " + user_fullname_l[user_fullname_l.length - 1][0] + "." + " " + Math.floor(Math.random() * 100);
 
-        var ace_editors = document.querySelectorAll(".ace_editor");
+        let ace_editors = document.querySelectorAll(".ace_editor");
 
         PRLVE_DATA.areas = {};
 
-        for (var i = 0; i < ace_editors.length; i++) {
+        for (let i = 0; i < ace_editors.length; i++) {
 
             let ace_editor_id = ace_editors[i].parentElement.parentElement.id;
-            PRLVE_DATA.areas[ace_editor_id] = {};
-            let area = PRLVE_DATA.areas[ace_editor_id];
+            let filename = ace_editors[i].parentElement.getElementsByClassName("card-header")[0].textContent;
+
+            PRLVE_DATA.areas[filename] = {};
+            let area = PRLVE_DATA.areas[filename];
+            area.uuid = ace_editor_id;
             area.editor_element = ace_editors[i];
-            area.filename = area.editor_element.parentElement.getElementsByClassName("card-header")[0].textContent;
             area.editor = area.editor_element.env.editor;
             area.session = area.editor.getSession();
             area.offline_content = area.session.getValue();
@@ -94,8 +97,8 @@ function p(x) {
             PRLVE_DATA.domain.models().openAutoCreate({
                     collection: PRLVE_DATA.course_instance,
                     id: PRLVE_DATA.instance_question,
-                    data: Object.keys(PRLVE_DATA.areas).reduce(function(obj, ace_editor_id) {
-                        obj[ace_editor_id] = PRLVE_DATA.areas[ace_editor_id].offline_content;
+                    data: Object.keys(PRLVE_DATA.areas).reduce(function(obj, filename) {
+                        obj[filename] = PRLVE_DATA.areas[filename].offline_content;
                         return obj;
                     }, {})
                 })
@@ -109,18 +112,18 @@ function p(x) {
             console.log("PRLVE: initModel");
             PRLVE_DATA.model = model;
 
-            var u = 0;
-            for (const ace_editor_id in PRLVE_DATA.areas) {
+            let u = 0;
+            for (const filename in PRLVE_DATA.areas) {
                 p(u);
-                p(ace_editor_id);
-                let area = PRLVE_DATA.areas[ace_editor_id];
-                area.model = PRLVE_DATA.model.elementAt(ace_editor_id);
+                p(filename);
+                let area = PRLVE_DATA.areas[filename];
+                area.model = PRLVE_DATA.model.elementAt(filename);
                 p("s1");
                 area.session.setValue(area.model.value());
                 area.editor.setReadOnly(false);
                 p("s2");
                 area.radarViewElement = area.editor_element.parentElement.getElementsByClassName("card-footer")[0];
-                area.aceBinder = new AceBinder(area.editor, area.model, PRLVE_DATA.collaborative, area.radarViewElement, ace_editor_id);
+                area.aceBinder = new AceBinder(area.editor, area.model, PRLVE_DATA.collaborative, area.radarViewElement);
                 area.aceBinder.bind();
                 p("s3");
                 // Add Button

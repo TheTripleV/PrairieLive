@@ -52,7 +52,7 @@ function p(x) {
         console.log("PRLVE: go");
 
         window.PRLVE_DATA.server_url = "https://prairie.live/realtime/convergence/default";
-        window.PRLVE_DATA.collaborative = false;
+        window.PRLVE_DATA.collaborative = true;
 
         let regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
 

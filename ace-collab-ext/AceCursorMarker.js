@@ -25,11 +25,13 @@ class AceCursorMarker {
             this._cursorElement = document.createElement("div");
             this._cursorElement.className = "ace-multi-cursor";
             this._cursorElement.style.background = this._color;
+            this._cursorElement.style.position = "absolute";
             this._markerElement.append(this._cursorElement);
             this._tooltipElement = document.createElement("div");
             this._tooltipElement.className = "ace-multi-cursor-tooltip";
             this._tooltipElement.style.background = this._color;
             this._tooltipElement.style.opacity = "0";
+            this._tooltipElement.style.position = "absolute";
             this._tooltipElement.innerHTML = label;
             this._markerElement.append(this._tooltipElement);
         }

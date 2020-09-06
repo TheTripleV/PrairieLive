@@ -45,6 +45,7 @@ class AceSelectionMarker {
         const div = document.createElement("div");
         div.className = "ace-multi-selection";
         div.style.backgroundColor = this._color;
+        div.style.position = "absolute";
         if (typeof bounds.height === "number") {
             div.style.height = `${bounds.height}px`;
         }

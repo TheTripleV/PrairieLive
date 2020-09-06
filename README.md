@@ -1,5 +1,5 @@
 # Prairie Live
-Sync Prairielearn code boxes to the cloud, live!
+Sync [Prairielearn](https://prairielearn.engr.illinois.edu/) code boxes to the cloud, live!
 
 If working on a Prarielearn group assignment, this extension will allow all group members to edit the text in realtime.
 

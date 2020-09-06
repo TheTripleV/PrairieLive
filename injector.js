@@ -19,7 +19,18 @@ injected_scripts = [
 
 injected_scripts.forEach(script_uri => {
     // console.log(script_uri);
-    var s = document.createElement('script');
+
+    if (!("PRLVE_INJECTED_SCRIPTS" in window)) {
+        window.PRLVE_INJECTED_SCRIPTS = {};
+    }
+
+    if (script_uri in window.PRLVE_INJECTED_SCRIPTS) {
+        return;
+    }
+
+    window.PRLVE_INJECTED_SCRIPTS[script_uri] = true;
+
+    let s = document.createElement('script');
 
     s.src = chrome.runtime.getURL(script_uri);
     s.onload = function() {

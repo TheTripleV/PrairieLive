@@ -19,25 +19,29 @@ function p(x) {
         `
         <div class="card mb-4 prlve-info">
             <div class="card-header bg-secondary text-white" style="background-color:#E84A27!important;">PraireLive Status</div>
-            <table class="table table-sm two-column-description-no-header" style="border-color:#E84A27!important;">
-            <tbody>
-                <tr>
-                    <td>Connection:</td>
-                    <td>
-                        <div class="prlve-connection-status">
-                            <span class="badge badge-danger">
-                                NO!
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Note</b>: You must click <br> save for Prairielearn <br> to save your code.
-                    </td>
-                </tr>
-            </tbody>
-          </table>
+            <table class="table table-sm two-column-description-no-header">
+                <tbody>
+                    <tr>
+                        <td>Connection:</td>
+                        <td>
+                            <div class="prlve-connection-status">
+                                <span class="badge badge-danger">
+                                    NO!
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm two-column-description-no-header">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Note</b>: You must click <br> save for Prairielearn <br> to save your code.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         `
     );

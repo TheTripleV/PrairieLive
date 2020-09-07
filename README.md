@@ -8,7 +8,9 @@ If working on a Prarielearn group assignment, this extension will allow all grou
 
 If working alone, this will sync your code so it isn't accidentally lost.
 
-Note: This extension has only been tested on Google Chrome but seems to work perfectly fine in Firefox too.
+**Note**: This extension has only been tested on Google Chrome but seems to work perfectly fine in Firefox too.
+
+**Note**: Live syncing will only occur between users of this extension. 
 
 Link to Chrome Webstore Download:
 

@@ -7,6 +7,10 @@ If working alone, this will sync your code so it isn't accidentally lost.
 
 Note: This extension has only been tested on Google Chrome but seems to work perfectly fine in Firefox too.
 
+Link to Chrome Webstore Download:
+
+https://chrome.google.com/webstore/detail/prairie-live/bfinjmepnadefebogpbmlpnhgfmhkmin
+
 ## Features
 
 ### Live Syncing Text
@@ -16,6 +20,11 @@ Note: This extension has only been tested on Google Chrome but seems to work per
 ![Live Syncing Text](images/plselection.gif)
 
 # Installation
+
+## Chrome Webstore
+Go to https://chrome.google.com/webstore/detail/prairie-live/bfinjmepnadefebogpbmlpnhgfmhkmin
+
+## Manual
 
 1. Download this repo by either:
 

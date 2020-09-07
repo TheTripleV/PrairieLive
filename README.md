@@ -1,4 +1,7 @@
 # Prairie Live
+
+[![Chrome Webstore link](https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png)](https://chrome.google.com/webstore/detail/prairie-live/bfinjmepnadefebogpbmlpnhgfmhkmin)
+
 Sync [Prairielearn](https://prairielearn.engr.illinois.edu/) code boxes to the cloud, live!
 
 If working on a Prarielearn group assignment, this extension will allow all group members to edit the text in realtime.

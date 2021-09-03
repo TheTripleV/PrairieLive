@@ -2,6 +2,10 @@
 /**
  * Represents a marker of a remote users cursor.
  */
+
+// MODIFIED
+// - changed tooltip text color from black to white
+
 class AceCursorMarker {
     /**
      * Constructs a new AceCursorMarker
@@ -32,6 +36,7 @@ class AceCursorMarker {
             this._tooltipElement.style.background = this._color;
             this._tooltipElement.style.opacity = "0";
             this._tooltipElement.style.position = "absolute";
+            this._tooltipElement.style.color = "white";
             this._tooltipElement.innerHTML = label;
             this._markerElement.append(this._tooltipElement);
         }

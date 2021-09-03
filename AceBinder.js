@@ -156,7 +156,7 @@ class AceBinder {
         reference.on("set", () => {
             const cursorIndex = reference.value();
             const cursorRow = this._document.indexToPosition(cursorIndex, 0).row;
-            console.log(cursorIndex);
+            // console.log(cursorIndex);
             this._cursorManager.setCursor(reference.sessionId(), cursorIndex);
             // if (this._radarView.hasView(reference.sessionId())) {
             //     this._radarView.setCursorRow(reference.sessionId(), cursorRow);

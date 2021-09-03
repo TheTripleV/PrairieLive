@@ -18,7 +18,21 @@ function p(x) {
     window.PRLVE_DATA.info_element = htmlToElement(
         `
         <div class="card mb-4 prlve-info">
-            <div class="card-header bg-secondary text-white" style="background-color:#E84A27!important;">PraireLive Status</div>
+            <div class="card-header bg-secondary text-white" style="background-color:#E84A27!important;">PraireLive</div>
+            <table class="table table-sm two-column-description-no-header">
+                <tbody>
+                    <tr>
+                        <td style="font-size:0.88rem!important;background-color:#eeeeee!important;">
+                            By: Vasista <br> <a href="mailto:vovveti2@illinois.edu">vovveti2@illinois.edu</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:0.88rem!important;background-color:#eeeeee!important;">
+                            Code: <a href="https://prairie.live">https://prairie.live</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <table class="table table-sm two-column-description-no-header">
                 <tbody>
                     <tr>
@@ -31,17 +45,16 @@ function p(x) {
                             </div>
                         </td>
                     </tr>
-                </tbody>
-            </table>
-            <table class="table table-sm two-column-description-no-header">
-                <tbody>
                     <tr>
                         <td>
-                            <b>Note</b>: You must click <br> save for Prairielearn <br> to save your code.
+                            People on this page:
+                            <br>
+                            <div class="prlve-page-viewers"></div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
         </div>
         `
     );
@@ -53,12 +66,12 @@ function p(x) {
 
 
     function prlvego() {
-        console.log("PRLVE: go");
+        console.log("PrairieLive: starting");
 
         window.PRLVE_DATA.server_url = "https://prairie.live/realtime/convergence/default";
         window.PRLVE_DATA.collaborative = true;
 
-        let regex_groups = /https:\/\/prairielearn.engr.illinois.edu\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
+        let regex_groups = /https:\/\/.*?\/pl\/course_instance\/(\d+)\/instance_question\/(\d+)/.exec(window.location.href);
 
         window.PRLVE_DATA.ciiq = regex_groups[1] + "-" + regex_groups[2];
         window.PRLVE_DATA.course_instance = regex_groups[1];
@@ -91,11 +104,11 @@ function p(x) {
         Convergence.connectAnonymously(window.PRLVE_DATA.server_url, window.PRLVE_DATA.user_display_name)
             .then(initApp)
             .catch((error) => {
-                console.log("Could not connect: " + error);
+                console.log("PrairieLive: Could not connect: " + error);
             });
 
         function initApp(domain) {
-            console.log("PRLVE: initApp");
+            console.log("PrairieLive: Connection Successful");
             window.PRLVE_DATA.domain = domain;
             // const modelService = domain.models();
             window.PRLVE_DATA.domain.models().openAutoCreate({
@@ -113,26 +126,39 @@ function p(x) {
         }
 
         function initModel(model) {
-            console.log("PRLVE: initModel");
+            console.log("PrairieLive: DB Model Sync Successful");
             window.PRLVE_DATA.model = model;
+            model.collaboratorsAsObservable()
+                .subscribe((_) => {
+                    // console.log(v);
+                    window.PRLVE_DATA.info_element.getElementsByClassName("prlve-page-viewers")[0]
+                        .innerHTML = model.collaborators()
+                            .sort()
+                            .map((collaborator) => {
+                                // return " - " + collaborator.user.displayName;
+                                let displayName = collaborator.user.displayName;
+                                let you = displayName == window.PRLVE_DATA.user_display_name? "(you) " : "";
+                                return ` - <span class="badge" style="background-color:${displayName.toColor()}!important;color:white!important;">${you}${displayName}</span>`
+                            }).join("<br>")
+                });
 
             let u = 0;
             for (const filename in window.PRLVE_DATA.areas) {
-                p(u);
-                p(filename);
+                // p(u);
+                p("PrairieLive: Enabling syncing for " + filename);
                 let area = window.PRLVE_DATA.areas[filename];
                 area.model = window.PRLVE_DATA.model.elementAt(filename);
-                p("s1");
+                // p("s1");
                 area.session.setValue(area.model.value());
                 area.editor.setReadOnly(false);
-                p("s2");
+                // p("s2");
                 area.radarViewElement = area.editor_element.parentElement.getElementsByClassName("card-footer")[0];
                 area.aceBinder = new AceBinder(area.editor, area.model, window.PRLVE_DATA.collaborative, area.radarViewElement);
                 area.aceBinder.bind();
-                p("s3");
+                // p("s3");
                 // Add Button
                 area.restore_button_element = htmlToElement(
-                    '<button type="button" class="btn btn-outline-secondary btn-sm prlve-restore-offline-version" tabindex="-1">PLive: Restore offline version</button>'
+                    '<button type="button" class="btn btn-outline-secondary btn-sm prlve-restore-offline-version" tabindex="-1">PrairieLive: Restore to PrairieLearn\'s version</button>'
                 );
 
                 let button_row = area.editor_element.parentElement.getElementsByClassName("card-footer")[0].getElementsByClassName("ml-auto")[0];
@@ -149,8 +175,6 @@ function p(x) {
             connection_element.textContent = "Yes!";
 
         } // end function initModel
-
-
 
     }
 

@@ -1,38 +1,47 @@
 {
     "name": "Prairie Live",
-    "version": "0.3",
+    "version": "0.5",
     "description": "Work together in realtime!",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "icons": {
         "128": "icon128.png"
     },
     "content_scripts": [{
         "run_at": "document_idle",
         "matches": [
-            "https://prairielearn.engr.illinois.edu/pl/course_instance/*/instance_question/*"
+            "https://prairielearn.engr.illinois.edu/pl/course_instance/*/instance_question/*",
+            "https://prairielearn.org/pl/course_instance/*/instance_question/*",
+            "https://www.prairielearn.org/pl/course_instance/*/instance_question/*"
         ],
         "js": [
             "injector.js"
         ],
         "css": []
     }],
-    "web_accessible_resources": [
-        "convergence/rxjs.umd.min.js",
-        "convergence/convergence.global.min.js",
-        "convergence/convergence-input-element-bindings.min.js",
+    "web_accessible_resources": [{
+        "resources": [
+            "convergence/rxjs.umd.min.js",
+            "convergence/convergence.global.min.js",
+            "convergence/convergence-input-element-bindings.min.js",
 
-        "ace-collab-ext/AceCursorMarker.js",
-        "ace-collab-ext/AceMultiCursorManager.js",
-        "ace-collab-ext/AceMultiSelectionManager.js",
-        "ace-collab-ext/AceRadarView.js",
-        "ace-collab-ext/AceRadarViewIndicator.js",
-        "ace-collab-ext/AceRangeUtil.js",
-        "ace-collab-ext/AceSelectionMarker.js",
-        "ace-collab-ext/AceViewportUtil.js",
+            "ace-collab-ext/AceCursorMarker.js",
+            "ace-collab-ext/AceMultiCursorManager.js",
+            "ace-collab-ext/AceMultiSelectionManager.js",
+            "ace-collab-ext/AceRadarView.js",
+            "ace-collab-ext/AceRadarViewIndicator.js",
+            "ace-collab-ext/AceRangeUtil.js",
+            "ace-collab-ext/AceSelectionMarker.js",
+            "ace-collab-ext/AceViewportUtil.js",
 
-        "AceBinder.js",
+            "AceBinder.js",
 
-        "inject.js"
-    ]
+            "inject.js"
+        ],
+        "matches": [
+            "https://prairielearn.engr.illinois.edu/*",
+            "https://prairielearn.org/*",
+            "https://www.prairielearn.org/*"
+        ]
+    }]
 
 }

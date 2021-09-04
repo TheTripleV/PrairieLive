@@ -24,6 +24,9 @@ https://chrome.google.com/webstore/detail/prairie-live/bfinjmepnadefebogpbmlpnhg
 ### Live Syncing Selections
 ![Live Syncing Text](images/plselection.gif)
 
+### Presence Detection
+![Presence Detection](images/plpeople.png)
+
 # Installation
 
 ## Chrome Webstore
